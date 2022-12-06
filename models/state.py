@@ -9,8 +9,7 @@ from models.city import City
 
 class State(BaseModel):
     """ State class """
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", backref="state", cascade="delete")
+    __tablename__ = "states"
 
     if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
@@ -20,3 +19,6 @@ class State(BaseModel):
                 if city.state_id == self.id:
                     cities_list.append(city)
             return cities_list
+    else:
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", backref="state", cascade="delete")
