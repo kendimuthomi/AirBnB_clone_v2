@@ -12,17 +12,17 @@ from models.place import Place
 from models.review import Review
 
 
+#models = {User, State, City, Amenity, Place, Review}
+models = {User, State, City}
 class DBStorage:
     """
     Database Engine
     """
     __engine = None
     __session = None
-    #models = {User, State, City, Amenity, Place, Review}
-    models = {User, State, City}
 
     def __init__(self):
-        """
+        """i
         Starts the DB engine
         """
         user = getenv("HBNB_MYSQL_USER")
@@ -40,7 +40,7 @@ class DBStorage:
         """
         sql_dict = {}
         if cls is None:
-            for model in models.values():
+            for model in models:
                 objects = self.__session.query(model).all()
                 for obj in objects:
                     key = obj.__class__.__name__ + '.' + obj.id
