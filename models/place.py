@@ -8,7 +8,7 @@ class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
-    user_id = ""
+    user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = ""
     description = ""
     number_rooms = 0

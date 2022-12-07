@@ -14,8 +14,7 @@ class BaseModel:
     """This class will defines all common attributes/methods
     for other classes
     """
-    id = Column(String(60), primary_key=True,
-                nullable=False, unique=True)
+    id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
 
@@ -70,6 +69,18 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
+<<<<<<< HEAD
+        """Convert instance into dict format"""
+        dictionary = {}
+        dictionary.update(self.__dict__)
+        dictionary.update({'__class__':
+                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary['created_at'] = self.created_at.isoformat()
+        dictionary['updated_at'] = self.updated_at.isoformat()
+        if '_sa_instance_state' in dictionary.keys():
+            del(dictionary['_sa_instance_state'])
+        return dictionary
+=======
         """creates dictionary of the class  and returns
         Return:
             returns a dictionary of all the key values in __dict__
@@ -82,6 +93,7 @@ class BaseModel:
             del(my_dict["_sa_instance_state"])
         return my_dict
 
+>>>>>>> 39293e2d8a9b74fb285abe2955cce65f501279cc
     def delete(self):
         """
         Deletes the current instance from the storage

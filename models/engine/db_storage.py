@@ -39,15 +39,16 @@ class DBStorage:
         returns a dictionary
         """
         sql_dict = {}
-        models = self.models
-        if cls:
-            models = {cls}
-        for model in models:
-            print(type(model))
-            objects = self.__session.query(eval(model)).all()
-            print(objects)
+        if cls is None:
+            for model in models.values():
+                objects = self.__session.query(model).all()
+                for obj in objects:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    sql_dict[key] = obj
+        else:
+            objects = self.__session.query(cls).all()
             for obj in objects:
-                key = "{}.{}".format(type(obj).__name__, obj.id)
+                key = obj.__class__.__name__ + '.' + obj.id
                 sql_dict[key] = obj
         return sql_dict
 
