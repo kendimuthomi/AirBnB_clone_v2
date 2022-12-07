@@ -6,7 +6,7 @@ from os import getenv
 from sqlalchemy.orm import relationship
 from models.amenity import Amenity
 from models.review import Review
-from sqlalchemy.sql.schemaimport Table
+from sqlalchemy.sql.schema import Table
 
 
 if getenv("HBNB_TYPE_STORAGE") == "db":
@@ -34,6 +34,8 @@ class Place(BaseModel, Base):
         longitude = Column(Float)
         reviews = relationship("Review", cascade="all, delete, delete-orphan",
                                 backref="place")
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False, backref="place_amenities")
     else:
         city_id = ""
         user_id = ""
@@ -57,17 +59,20 @@ class Place(BaseModel, Base):
                     review_list.append(review)
             return review_list
 
-        @propert
-        def amenities(self);
-        """Get/Set linked Amenities"""
-        from models import storage
-        amenity_list = []
-        for amenity in list(storage.all(Amenity).values()):
-            if amenity.id == self.amenity_ids:
-                amenity_list.append(amenity)
-        return amenity_list
+        @property
+        def amenities(self):
+            """Get/Set linked Amenities"""
+            from models import storage
+            amenity_list = []
+            for amenity in list(storage.all(Amenity).values()):
+                if amenity.id == self.amenity_ids:
+                    amenity_list.append(amenity)
+            return amenity_list
 
-    @amenities.setter
-    def amenities(self, value):
-        if type(value) == Amenity:
-            self.amenity_ids.append(value)
+        @amenities.setter
+        def amenities(self, value):
+            """method for adding an Amenity.id to the attribute amenity_ids"""
+            if value is not None:
+                if isinstance(value, Amenity):
+                    if value.id not in self.amenity_ids:
+                        self.amenity_ids.append(value.id)
