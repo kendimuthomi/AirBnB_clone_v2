@@ -12,8 +12,12 @@ from models.place import Place
 from models.review import Review
 
 
-#models = {User, State, City, Amenity, Place, Review}
+if getenv("HBNB_TYPE_STORAGE") == "db":
+    from models.place import place_amenity
+
 models = {User, State, City, Place, Review, Amenity}
+
+
 class DBStorage:
     """
     Database Engine
