@@ -13,7 +13,7 @@ from models.review import Review
 
 
 #models = {User, State, City, Amenity, Place, Review}
-models = {User, State, City, Place, Review}
+models = {User, State, City, Place, Review, Amenity}
 class DBStorage:
     """
     Database Engine
