@@ -1,88 +1,70 @@
 #!/usr/bin/python3
-"""This is the file storage class for AirBnB"""
-import json
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
+"""Defines the BaseModel class."""
+import models
+from uuid import uuid4
+from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import String
+
+Base = declarative_base()
 
 
-class FileStorage:
-    """This class serializes instances to a JSON file and
-    deserializes JSON file to instances
+class BaseModel:
+    """Defines the BaseModel class.
+
     Attributes:
-        __file_path: path to the JSON file
-        __objects: objects will be stored
+        id (sqlalchemy String): The BaseModel id.
+        created_at (sqlalchemy DateTime): The datetime at creation.
+        updated_at (sqlalchemy DateTime): The datetime of last update.
     """
-<<<<<<< HEAD
-    id = Column(String(60), primary_key=True,
-                nullable=False, unique=True)
-    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
-=======
-    __file_path = "file.json"
-    __objects = {}
->>>>>>> a9f40503e2a174c8ba4d5549db402c3e21d7bf26
 
-    def all(self, cls=None):
-        """returns a dictionary
-        Return:
-            returns a dictionary of __object
-        """
-        if cls is not None:
-            new_dictionary = {}
-            for key, values in FileStorage.__objects.items():
-                #print("Clase: {}".format(cls.__name__))
-                if (type(cls) is str):
-                    #print("String: {}".format(cls))
-                    cls = eval(cls)
-                if (cls.__name__ in key):
-                    new_dictionary.update({key: values})
-            return new_dictionary
-        else:
-            return self.__objects
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
-    def new(self, obj):
-        """sets __object to given obj
+    def __init__(self, *args, **kwargs):
+        """Initialize a new BaseModel.
+
         Args:
-            obj: given object
+            *args (any): Unused.
+            **kwargs (dict): Key/value pairs of attributes.
         """
-        if obj:
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            self.__objects[key] = obj
+        self.id = str(uuid4())
+        self.created_at = self.updated_at = datetime.utcnow()
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != "__class__":
+                    setattr(self, key, value)
 
     def save(self):
-        """serialize the file path to JSON file path
-        """
-        my_dict = {}
-        for key, value in self.__objects.items():
-            my_dict[key] = value.to_dict()
-        with open(self.__file_path, 'w', encoding="UTF-8") as f:
-            json.dump(my_dict, f)
+        """Update updated_at with the current datetime."""
+        self.updated_at = datetime.utcnow()
+        models.storage.new(self)
+        models.storage.save()
 
-    def reload(self):
-        """serialize the file path to JSON file path
-        """
-        try:
-            with open(self.__file_path, 'r', encoding="UTF-8") as f:
-                for key, value in (json.load(f)).items():
-                    value = eval(value["__class__"])(**value)
-                    self.__objects[key] = value
-        except FileNotFoundError:
-            pass
+    def to_dict(self):
+        """Return a dictionary representation of the BaseModel instance.
 
-    def delete(self, obj=None):
-        """ Delete object
+        Includes the key/value pair __class__ representing
+        the class name of the object.
         """
-        if obj is not None:
-            key = (type(obj).__name__) + '.' + obj.__dict__['id']
-            del self.__objects[key]
+        my_dict = self.__dict__.copy()
+        my_dict["__class__"] = str(type(self).__name__)
+        my_dict["created_at"] = self.created_at.isoformat()
+        my_dict["updated_at"] = self.updated_at.isoformat()
+        my_dict.pop("_sa_instance_state", None)
+        return my_dict
 
-    def close(self):
-        """
-        call reload() method for deserializing the JSON file to objects
-        """
-        self.reload()
+    def delete(self):
+        """Delete the current instance from storage."""
+        models.storage.delete(self)
+
+    def __str__(self):
+        """Return the print/str representation of the BaseModel instance."""
+        d = self.__dict__.copy()
+        d.pop("_sa_instance_state", None)
+        return "[{}] ({}) {}".format(type(self).__name__, self.id, d)
