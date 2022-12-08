@@ -2,6 +2,7 @@
 """ """
 from tests.test_models.test_base_model import test_basemodel
 from models.place import Place
+from os import getenv
 
 
 class test_Place(test_basemodel):
@@ -66,4 +67,6 @@ class test_Place(test_basemodel):
     def test_amenity_ids(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.amenity_ids), list)
+        self.assertEqual(type(new.amenity_ids), list if
+                         getenv('HBNB_TYPE_STORAGE') != 'db' else
+                         type(None))
