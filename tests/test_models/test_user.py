@@ -2,6 +2,7 @@
 """ """
 from tests.test_models.test_base_model import test_basemodel
 from models.user import User
+from os import getenv
 
 
 class test_User(test_basemodel):
@@ -16,7 +17,9 @@ class test_User(test_basemodel):
     def test_first_name(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.first_name), str)
+        self.assertEqual(type(new.first_name), str), if
+                         getenv("HBNB_TYPE_STORAGE") != "db" else
+                         type(None))
 
     def test_last_name(self):
         """ """
