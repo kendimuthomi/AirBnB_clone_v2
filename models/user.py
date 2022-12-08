@@ -12,10 +12,15 @@ class User(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE") == "db":
         email = Column('email', String(128), nullable=False)
         password = Column('password', String(128), nullable=False)
-        first_name = Column('first_name', String(128), nullable=True, default="NULL")
-        last_name = Column('last_name', String(128), nullable=True, default="NULL")
-        places = relationship('Place', backref='user', cascade='all, delete, delete-orphan')
-        reviews = relationship('Review', backref='user', cascade='all, delete, delete-orphan')
+        first_name = Column('first_name',
+                            String(128), nullable=True,
+                            default="NULL")
+        last_name = Column('last_name', String(128),
+                           nullable=True, default="NULL")
+        places = relationship('Place', backref='user',
+                              cascade='all, delete, delete-orphan')
+        reviews = relationship('Review', backref='user',
+                               cascade='all, delete, delete-orphan')
     else:
         email = ""
         password = ""
