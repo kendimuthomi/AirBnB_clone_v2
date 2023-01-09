@@ -6,7 +6,7 @@ sudo apt-get -y update
 sudo apt-get -y install nginx
 
 # creating folders
-sudo mkdir -p /data/web_static/releases/test/ /data/web-static/shared/
+sudo mkdir -p /data/web_static/releases/test/ /data/web_static/shared/
 
 # adding test string
 echo "<h2>www.realkendimuthomi.tech Let's GOOO!</h2>" > /data/web_static/releases/test/index.html
