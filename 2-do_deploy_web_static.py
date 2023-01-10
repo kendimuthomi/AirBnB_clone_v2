@@ -10,6 +10,7 @@ from datetime import datetime
 
 env.hosts = ["18.206.208.218", "52.201.228.174"]
 
+
 def do_pack():
     """ generating a .tgz archive"""
     local("mkdir -p versions")
@@ -21,6 +22,7 @@ def do_pack():
         return path
     else:
         return None
+
 
 def do_deploy(archive_path):
     """Fabric script (based on the file 1-pack_web_static.py)
