@@ -4,7 +4,6 @@ of the web_static folder of your AirBnB Clone repo
 using the function do_pack."""
 
 import os
-from pathlib import Path
 from fabric.api import local, env, run, put
 from datetime import datetime
 
@@ -30,16 +29,16 @@ def do_deploy(archive_path):
     using the function do_deploy"""
     if os.path.exists(archive_path):
         archive_file = os.path.basename(archive_path)
-        archive_folder = Path(archive_path).stem
+        archive_folder = archive_file.replace(".tgz", "")
         archived_path = "/data/web_static/releases/{}/".format(archive_folder)
 
         put(archive_path, "/tmp/{}".format(archive_file))
         run("mkdir -p {}".format(archived_path))
         run("tar -xvzf /tmp/{} -C {}".format(archive_file, archived_path))
         run("rm -rf /tmp/{}".format(archive_file))
-        run("mv {}/web_static/* {}".format(archived_path, archived_path))
-        run("rm -rf {}/web_static".format(archived_path))
-        run("rm -rf /data/web-static/current")
+        run("mv {}web_static/* {}".format(archived_path, archived_path))
+        run("rm -rf {}web_static".format(archived_path))
+        run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(archived_path))
 
         print("New version deployed!")
