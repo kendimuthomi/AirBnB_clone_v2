@@ -18,7 +18,7 @@ def hbnb():
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def c_is_fun():
+def c_is_fun(text):
     """print C plus text"""
     return "C" + text.replace("_", " ")
 
