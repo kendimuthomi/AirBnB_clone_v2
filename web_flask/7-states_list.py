@@ -9,8 +9,8 @@ app = Flask(__name__)
 @app.route('/states_list', strict_slashes=False)
 def display_states():
     """display an html page of a list of states"""
-    states = storage.all(State)
-    return render_template('7-states_list.html')
+    states = storage.all("State")
+    return render_template('7-states_list.html', states=states)
 
 
 @app.teardown_appcontext
@@ -19,6 +19,6 @@ def close(error):
     storage.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """Main function"""
     app.run(host='0.0.0.0', port=5000)
