@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
-from os import getenv
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
+from models import storage_type
+from sqlalchemy import Column, String
 
 
 class Amenity(BaseModel, Base):
-    __tablename__ = "amenities"
-    if getenv("HBNB_TYPE_STORAGE") == "db":
+    '''amenity class'''
+    __tablename__ = 'amenities'
+    if storage_type == 'db':
         name = Column(String(128), nullable=False)
     else:
         name = ""
