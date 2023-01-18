@@ -48,34 +48,10 @@ class BaseModel:
                 if not hasattr(kwargs, 'updated_at'):
                     setattr(self, 'updated_at', datetime.now())
 
-<<<<<<< HEAD
-        Args:
-            *args (any): Unused.
-            **kwargs (dict): Key/value pairs of attributes.
-        """
-        if not kwargs:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        else:
-            for k in kwargs:
-                if k in ['created_at', 'updated_at']:
-                    setattr(self, k, datetime.fromisoformat(kwargs[k]))
-                elif k != '__class__':
-                    setattr(self, k, kwargs[k])
-                if storage_type == 'db':
-                    if not hasattr(kwargs, 'id'):
-                        setattr(self, 'id', str(uuid.uuid4()))
-                    if not hasattr(kwargs, 'created_at'):
-                        setattr(self, 'created_at', datetime.now())
-                    if not hasattr(kwargs, 'updated_at'):
-                        setattr(self, 'updated_at', datetime.now())
-=======
     def __str__(self):
         """Returns a string representation of the instance"""
         return '[{}] ({}) {}'.format(
             self.__class__.__name__, self.id, self.__dict__)
->>>>>>> d75c0c5e174575af254a71a1d933d3a47a3001b3
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -96,16 +72,6 @@ class BaseModel:
         return dct
 
     def delete(self):
-<<<<<<< HEAD
-        """Delete the current instance from storage."""
-        models.storage.delete(self)
-
-    def __str__(self):
-        """Return the print/str representation of the BaseModel instance."""
-        return '[{}] ({}) {}'.format(
-            self.__class__.__name__, self.id, self.__dict__)
-=======
         '''deletes the current instance from the storage'''
         from models import storage
         storage.delete(self)
->>>>>>> d75c0c5e174575af254a71a1d933d3a47a3001b3
