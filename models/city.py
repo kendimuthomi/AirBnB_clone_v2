@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This is the city class"""
 from models.base_model import BaseModel, Base
+from models.place import Place
 from sqlalchemy import Column, Integer, String, ForeignKey
 from os import getenv
 from sqlalchemy.orm import relationship
@@ -19,6 +20,10 @@ class City(BaseModel, Base):
         places = relationship('Place',
                               backref='cities',
                               cascade='all, delete, delete-orphan')
+        def __init__(self, **kwargs):
+            setattr(self, "id", str(uuid4()))
+            for i, j in kwargs.items():
+                setattr(self, i, j)
     else:
         name = ''
         state_id = ''

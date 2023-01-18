@@ -41,6 +41,10 @@ class Place(BaseModel, Base):
                                cascade='all, delete, delete-orphan')
         amenities = relationship('Amenity', secondary=place_amenity,
                                  viewonly=False, backref='place_amenities')
+        def __init__(self, **kwargs):
+            setattr(self, "id", str(uuid4()))
+            for k, v in kwargs.items():
+                setattr(self, k, v)
     else:
         city_id = ""
         user_id = ""
